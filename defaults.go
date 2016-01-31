@@ -4,6 +4,7 @@ import (
 	"errors"
 	"reflect"
 	"strconv"
+	"time"
 )
 
 var errInvalidFieldType = errors.New("invalid field type")
@@ -43,7 +44,12 @@ func setField(field reflect.Value, defaultVal string) {
 		iface, err = strconv.ParseInt(defaultVal, 10, 32)
 		iface = int32(iface.(int64))
 	case reflect.Int64:
-		iface, err = strconv.ParseInt(defaultVal, 10, 64)
+		t, err := time.ParseDuration(defaultVal)
+		if err == nil {
+			iface, err = t, nil
+		} else {
+			iface, err = strconv.ParseInt(defaultVal, 10, 64)
+		}
 	case reflect.Uint:
 		iface, err = strconv.ParseUint(defaultVal, 10, 64)
 		iface = uint(iface.(uint64))
