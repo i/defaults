@@ -51,3 +51,28 @@ func TestDefaults(t *testing.T) {
 	assert.Equal(t, foo.StructField, struct{}{})
 	assert.Equal(t, foo.NoDefault, "")
 }
+
+func TestSet(t *testing.T) {
+	foo := new(Foo)
+	assert.NoError(t, Set(foo))
+
+	assert.Equal(t, foo.Int, int(1))
+	assert.Equal(t, foo.Int8, int8(2))
+	assert.Equal(t, foo.Int16, int16(3))
+	assert.Equal(t, foo.Int32, int32(4))
+	assert.Equal(t, foo.Int64, int64(5))
+	assert.Equal(t, foo.Uint, uint(6))
+	assert.Equal(t, foo.Uint8, uint8(7))
+	assert.Equal(t, foo.Uint16, uint16(8))
+	assert.Equal(t, foo.Uint32, uint32(9))
+	assert.Equal(t, foo.Uint64, uint64(10))
+	assert.Equal(t, foo.Uintptr, uintptr(11))
+	assert.Equal(t, foo.Float32, float32(1.2))
+	assert.Equal(t, foo.Float64, float64(1.3))
+	assert.Equal(t, foo.BoolTrue, true)
+	assert.Equal(t, foo.BoolFalse, false)
+	assert.Equal(t, foo.String, "cheese")
+	assert.Equal(t, foo.Duration, 10*time.Second)
+	assert.Equal(t, foo.StructField, struct{}{})
+	assert.Equal(t, foo.NoDefault, "")
+}

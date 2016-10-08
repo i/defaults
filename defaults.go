@@ -7,10 +7,37 @@ import (
 	"time"
 )
 
-var errInvalidFieldType = errors.New("invalid field type")
+var (
+	errInvalidFieldType = errors.New("invalid field type")
+	errInvalidType      = errors.New("not a struct pointer")
+)
 
 const defaultFieldName = "default"
 
+// Set sets the default values on a struct pointed to by val. Val must be a
+// struct pointer.
+func Set(val interface{}) error {
+	if reflect.TypeOf(val).Kind() != reflect.Ptr {
+		return errInvalidType
+	}
+	v := reflect.ValueOf(val)
+	for v.Kind() == reflect.Ptr {
+		v = v.Elem()
+	}
+	t := v.Type()
+	if t.Kind() != reflect.Struct {
+		return errInvalidType
+	}
+	for i := 0; i < t.NumField(); i++ {
+		field := v.Field(i)
+		setField(field, t.Field(i).Tag.Get(defaultFieldName))
+	}
+
+	return nil
+}
+
+// NewWithDefaults copies src and returns a new struct with initialized values.
+// This function is deprecated.
 func NewWithDefaults(src interface{}) interface{} {
 	t := reflect.TypeOf(src)
 	clone := reflect.New(reflect.TypeOf(src))

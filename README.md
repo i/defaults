@@ -26,11 +26,13 @@ type Person struct {
 }
 
 func main() {
-  p := defaults.NewWithDefaults(Person{}).(Person)
+  var p person
+  if err := defaults.Set(&p); err != nil {
+    panic(err)
+  }
 
   fmt.Println(p.Name)           // prints Fred Durst
   fmt.Println(p.Age)            // prints 12
   fmt.Println(p.ConvictedFelon) // prints true
 }
-
 ```
