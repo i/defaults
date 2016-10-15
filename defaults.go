@@ -29,8 +29,9 @@ func Set(val interface{}) error {
 		return errInvalidType
 	}
 	for i := 0; i < t.NumField(); i++ {
-		field := v.Field(i)
-		setField(field, t.Field(i).Tag.Get(defaultFieldName))
+		if def := t.Field(i).Tag.Get(defaultFieldName); def != "" {
+			setField(v.Field(i), def)
+		}
 	}
 
 	return nil
@@ -42,16 +43,14 @@ func NewWithDefaults(src interface{}) interface{} {
 	t := reflect.TypeOf(src)
 	clone := reflect.New(reflect.TypeOf(src))
 	for i := 0; i < t.NumField(); i++ {
-		setField(clone.Elem().Field(i), t.Field(i).Tag.Get(defaultFieldName))
+		if def := t.Field(i).Tag.Get(defaultFieldName); def != "" {
+			setField(clone.Elem().Field(i), def)
+		}
 	}
 	return clone.Elem().Interface()
 }
 
 func setField(field reflect.Value, defaultVal string) {
-	if defaultVal == "" {
-		return
-	}
-
 	var iface interface{}
 	var err error
 

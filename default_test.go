@@ -8,28 +8,29 @@ import (
 )
 
 type Foo struct {
-	Int         int           `default:"1"`
-	Int8        int8          `default:"2"`
-	Int16       int16         `default:"3"`
-	Int32       int32         `default:"4"`
-	Int64       int64         `default:"5"`
-	Uint        uint          `default:"6"`
-	Uint8       uint8         `default:"7"`
-	Uint16      uint16        `default:"8"`
-	Uint32      uint32        `default:"9"`
-	Uint64      uint64        `default:"10"`
-	Uintptr     uintptr       `default:"11"`
-	Float32     float32       `default:"1.2"`
-	Float64     float64       `default:"1.3"`
-	BoolTrue    bool          `default:"true"`
-	BoolFalse   bool          `default:"false"`
-	String      string        `default:"cheese"`
-	Duration    time.Duration `default:"10s"`
-	StructField struct{}      `default:"{}"`
-	NoDefault   string
+	Int          int           `default:"1"`
+	Int8         int8          `default:"2"`
+	Int16        int16         `default:"3"`
+	Int32        int32         `default:"4"`
+	Int64        int64         `default:"5"`
+	Uint         uint          `default:"6"`
+	Uint8        uint8         `default:"7"`
+	Uint16       uint16        `default:"8"`
+	Uint32       uint32        `default:"9"`
+	Uint64       uint64        `default:"10"`
+	Uintptr      uintptr       `default:"11"`
+	Float32      float32       `default:"1.2"`
+	Float64      float64       `default:"1.3"`
+	BoolTrue     bool          `default:"true"`
+	BoolFalse    bool          `default:"false"`
+	String       string        `default:"cheese"`
+	Duration     time.Duration `default:"10s"`
+	StructField  struct{}      `default:"{}"`
+	EmptyDefault string        `default:""`
+	NoDefault    string
 }
 
-func TestDefaults(t *testing.T) {
+func TestNew(t *testing.T) {
 	foo := NewWithDefaults(Foo{}).(Foo)
 	assert.Equal(t, foo.Int, int(1))
 	assert.Equal(t, foo.Int8, int8(2))
@@ -75,4 +76,11 @@ func TestSet(t *testing.T) {
 	assert.Equal(t, foo.Duration, 10*time.Second)
 	assert.Equal(t, foo.StructField, struct{}{})
 	assert.Equal(t, foo.NoDefault, "")
+}
+
+func TestInvalidType(t *testing.T) {
+	var foo Foo
+	assert.Equal(t, errInvalidType, Set(foo))
+	var k int
+	assert.Equal(t, errInvalidType, Set(&k))
 }
