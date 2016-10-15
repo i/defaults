@@ -1,6 +1,6 @@
-defaults
-========
-![Coverage Status](https://coveralls.io/repos/github/i/defaults/badge.svg)
+defaults ![Coverage Status](https://coveralls.io/repos/github/i/defaults/badge.svg)
+====
+
 initialize structs with default values
 
 how to get
